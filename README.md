@@ -44,7 +44,7 @@ Build and deploy a checked-out production revision:
 
 ```sh
 bun run build
-bunx wrangler pages deploy out --project-name chubbs-patisserie --branch main
+CLOUDFLARE_ACCOUNT_ID=3ec23b7e16a1498b0f0864461d4832ee bunx wrangler pages deploy out --project-name chubbs-patisserie --branch main
 ```
 
-`--branch main` publishes production. Use a different branch name for a preview. The Cloudflare account identifier in `wrangler.jsonc` is not a credential. Keep credentials and local Wrangler state out of Git.
+`--branch main` publishes production. Use a different branch name for a preview. The account identifier is not a credential and is supplied through the environment because Pages configuration files do not accept `account_id`. Keep credentials and local Wrangler state out of Git.
