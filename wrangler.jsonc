@@ -1,0 +1,6 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "chubbs-patisserie",
+  "account_id": "3ec23b7e16a1498b0f0864461d4832ee",
+  "pages_build_output_dir": "./out"
+}
