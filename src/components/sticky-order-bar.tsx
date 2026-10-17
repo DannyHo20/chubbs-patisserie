@@ -3,17 +3,23 @@
 import { useEffect, useState } from "react";
 import { WhatsAppIcon } from "./icons";
 
-/** Mobile order bar that appears once the main order button scrolls out of view. */
+/** Mobile order bar shown whenever the main order button is off screen, and tucked away over the footer. */
 export function StickyOrderBar({ name, price, href }: { name: string; price?: string; href: string }) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const target = document.getElementById("order-primary");
-    if (!target) return;
-    const observer = new IntersectionObserver(([entry]) =>
-      setVisible(!entry.isIntersecting && entry.boundingClientRect.top < 0),
+    const targets = [document.getElementById("order-primary"), document.querySelector("footer")].filter(
+      (el): el is HTMLElement => el !== null,
     );
-    observer.observe(target);
+    const onScreen = new Set<Element>();
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) onScreen.add(entry.target);
+        else onScreen.delete(entry.target);
+      }
+      setVisible(onScreen.size === 0);
+    });
+    targets.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
   }, []);
 

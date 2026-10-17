@@ -1,9 +1,31 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
-import type { ReactNode } from "react";
+import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 
-const ease = [0.22, 1, 0.36, 1] as const;
+/**
+ * Hides an element only if it starts below the fold, then reveals it when it scrolls into view.
+ * The server HTML is always visible, so content never waits on JavaScript and nothing on screen
+ * disappears at hydration. The `.reveal*` styles in globals.css drive the transition.
+ */
+function useReveal<T extends HTMLElement>(amount: number) {
+  const ref = useRef<T>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || el.getBoundingClientRect().top < window.innerHeight) return;
+    el.dataset.reveal = "pending";
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        el.dataset.reveal = "shown";
+        observer.disconnect();
+      },
+      { threshold: amount },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [amount]);
+  return ref;
+}
 
 /** Fades and lifts its children once, as they scroll into view. */
 export function Reveal({
@@ -19,15 +41,13 @@ export function Reveal({
   className?: string;
   as?: "div" | "li" | "p" | "h2" | "span";
 }) {
-  const reduce = useReducedMotion();
-  const Tag = motion[as];
+  const ref = useReveal<HTMLDivElement>(0.15);
+  const Tag = as as "div";
   return (
     <Tag
-      className={className}
-      initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.15 }}
-      transition={{ duration: reduce ? 0.2 : 0.9, delay: reduce ? 0 : delay, ease }}
+      ref={ref}
+      className={`reveal ${className ?? ""}`}
+      style={{ "--reveal-delay": `${delay}s`, "--reveal-y": `${y}px` } as CSSProperties}
     >
       {children}
     </Tag>
@@ -36,47 +56,33 @@ export function Reveal({
 
 /** Image container revealed with a rising clip and a gentle settle in scale. */
 export function ImageReveal({ children, className, delay = 0 }: { children: ReactNode; className?: string; delay?: number }) {
-  const reduce = useReducedMotion();
   // The observer sits on an unclipped wrapper: IntersectionObserver ignores a fully clipped target.
+  const ref = useReveal<HTMLDivElement>(0.2);
   return (
-    <motion.div
-      className={`relative ${className ?? ""}`}
-      initial="hidden"
-      whileInView="shown"
-      viewport={{ once: true, amount: 0.2 }}
+    <div
+      ref={ref}
+      className={`reveal-image relative ${className ?? ""}`}
+      style={{ "--reveal-delay": `${delay}s` } as CSSProperties}
     >
-      <motion.div
-        className="absolute inset-0 overflow-hidden"
-        variants={{ hidden: { clipPath: "inset(100% 0 0 0)" }, shown: { clipPath: "inset(0% 0 0 0)" } }}
-        transition={{ duration: reduce ? 0 : 1.3, delay, ease }}
-      >
-        <motion.div
-          className="relative h-full w-full"
-          variants={{ hidden: { scale: 1.08 }, shown: { scale: 1 } }}
-          transition={{ duration: reduce ? 0 : 1.6, delay, ease }}
-        >
-          {children}
-        </motion.div>
-      </motion.div>
-    </motion.div>
+      <div className="reveal-clip absolute inset-0 overflow-hidden">
+        <div className="reveal-zoom relative h-full w-full">{children}</div>
+      </div>
+    </div>
   );
 }
 
-/** Splits a headline into lines that rise from behind a mask. Pass each line as an array item. */
+/**
+ * Splits a headline into lines that rise from behind a mask on page load. Pass each line as an array item.
+ * A CSS animation runs as soon as the stylesheet loads, so the headline never waits on JavaScript.
+ */
 export function MaskedLines({ lines, className, delay = 0.15 }: { lines: ReactNode[]; className?: string; delay?: number }) {
-  const reduce = useReducedMotion();
   return (
     <span className={className}>
       {lines.map((line, i) => (
         <span key={i} className="block overflow-hidden pb-[0.08em]">
-          <motion.span
-            className="block"
-            initial={{ y: "105%" }}
-            animate={{ y: 0 }}
-            transition={{ duration: reduce ? 0.2 : 1.1, delay: reduce ? 0 : delay + i * 0.09, ease }}
-          >
+          <span className="rise-in block" style={{ animationDelay: `${delay + i * 0.09}s` }}>
             {line}
-          </motion.span>
+          </span>
         </span>
       ))}
     </span>

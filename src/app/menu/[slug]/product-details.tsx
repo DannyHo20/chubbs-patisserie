@@ -97,7 +97,7 @@ export async function ProductDetails({ params }: Pick<PageProps<"/menu/[slug]">,
               <ol className="mt-4 border-t border-line">
                 {product.layers.map((layer, i) => (
                   <li key={layer} className="flex items-baseline gap-6 border-b border-line py-3">
-                    <span className="w-6 font-display text-sm tabular-nums text-red">{String(i + 1).padStart(2, "0")}</span>
+                    <span className="w-6 font-display text-base font-medium tabular-nums text-red">{String(i + 1).padStart(2, "0")}</span>
                     <span className="text-[0.95rem] tracking-[0.02em]">{layer}</span>
                   </li>
                 ))}

@@ -17,7 +17,7 @@ const steps = [
 const gallery = [
   { src: "/images/matcha-cover.jpg", alt: "Matcha Jasmine Grape Cake topped with glazed green grapes" },
   { src: "/images/lab-2.jpg", alt: "The Chubbs kitchen under construction, with illustrated bakers" },
-  { src: "/images/black-forest-tart-overhead.jpg", alt: "Black Forest Tart seen from above" },
+  { src: "/images/lab-1.jpg", alt: "The Chubbs kitchen before opening, captioned Coming Soon" },
   { src: "/images/black-forest-cake-cover.jpg", alt: "Black Forest Cake crowned with cherries and a chocolate lattice" },
   { src: "/images/lab-4.jpg", alt: "The finished Chubbs kitchen with an illustration of a baker carrying a cake" },
   { src: "/images/tiramisu-tart.jpg", alt: "Tiramisu Tart with piped mascarpone ganache" },
@@ -108,9 +108,11 @@ export default function Home() {
             <figcaption className="mt-4 flex w-full items-baseline justify-between gap-4 text-sm text-paper/70 lg:max-w-[min(calc((100dvh-200px)*0.8),624px)]">
               <span>
                 <span className="font-display text-lg italic text-paper">Black Forest Cake</span>
-                <span className="ml-3 hidden sm:inline">Seven layers, chocolate &amp; cherry</span>
+                <span className="ml-3 hidden sm:inline lg:hidden xl:inline">Seven layers, chocolate &amp; cherry</span>
               </span>
-              <span className="eyebrow hidden text-[0.62rem] text-paper/55 lg:inline">Hover to look inside</span>
+              <span className="eyebrow hidden whitespace-nowrap text-[0.62rem] text-paper/55 [@media(hover:hover)_and_(min-width:1024px)]:inline">
+                Hover to look inside
+              </span>
             </figcaption>
           </figure>
         </div>
@@ -141,7 +143,7 @@ export default function Home() {
             </Reveal>
             <Reveal delay={0.1} className="max-w-sm text-ink-soft">
               <p>
-                {products.length} pastries, each made to order. Hover or tap a cake to see inside it.
+                {products.length} pastries, each made to order. Open any cake to see every layer.
               </p>
             </Reveal>
           </div>
@@ -185,8 +187,8 @@ export default function Home() {
           <div className="relative lg:col-span-6">
             <ImageReveal className="aspect-[4/5] bg-stone">
               <Image
-                src="/images/lab-1.jpg"
-                alt="Black-and-white photo of the Chubbs kitchen with an illustrated baker carrying a cake, captioned Coming Soon"
+                src="/images/black-forest-tart-overhead.jpg"
+                alt="Black Forest Tart seen from above"
                 fill
                 sizes="(min-width: 1024px) 45vw, 100vw"
                 className="object-cover"

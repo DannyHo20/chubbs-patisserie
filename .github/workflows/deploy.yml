@@ -1,0 +1,40 @@
+name: Build and deploy
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  site:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: package.json
+      - run: bun install --frozen-lockfile
+      - run: bun run lint
+      - run: bun run build
+      - name: Deploy to Cloudflare Pages
+        if: github.event_name == 'push'
+        env:
+          CLOUDFLARE_ACCOUNT_ID: 3ec23b7e16a1498b0f0864461d4832ee
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+        run: >-
+          bunx wrangler pages deploy out
+          --project-name chubbs-patisserie
+          --branch main
+          --commit-hash "$GITHUB_SHA"
+          --commit-message "$COMMIT_MESSAGE"
