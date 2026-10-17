@@ -4,7 +4,7 @@ import { site, whatsappLink } from "@/data/site";
 
 export function Footer() {
   return (
-    <footer className="bg-ink text-paper">
+    <footer className="on-dark bg-ink text-paper">
       <div className="mx-auto max-w-[1440px] px-6 pb-10 pt-24 md:px-12 md:pt-32">
         <div className="flex flex-col items-center text-center">
           <Image src="/brand/wordmark-white.png" alt={site.name} width={513} height={265} className="h-20 w-auto md:h-24" />

@@ -3,17 +3,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { motion } from "motion/react";
 import { products, type Category } from "@/data/products";
 import { ProductCard } from "./product-card";
+import { Reveal } from "./reveal";
 
 const filters: { label: string; value: Category | "All" }[] = [
   { label: "All", value: "All" },
   { label: "Cakes", value: "Cake" },
   { label: "Tarts", value: "Tart" },
 ];
-
-const ease = [0.22, 1, 0.36, 1] as const;
 
 export function MenuGrid() {
   const [filter, setFilter] = useState<Category | "All">("All");
@@ -44,23 +42,11 @@ export function MenuGrid() {
 
       <ul className="mt-12 grid gap-x-6 gap-y-14 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-8">
           {shown.map((p, i) => (
-            <motion.li
-              key={`${filter}-${p.slug}`}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.15 }}
-              transition={{ duration: 0.9, delay: (i % 4) * 0.08, ease }}
-            >
+            <Reveal as="li" key={p.slug} delay={(i % 4) * 0.08}>
               <ProductCard product={p} />
-            </motion.li>
+            </Reveal>
           ))}
-          <motion.li
-            key={`${filter}-story`}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.15 }}
-            transition={{ duration: 0.9, ease }}
-          >
+          <Reveal as="li">
             <Link href="#story" className="group block">
               <div className="relative aspect-[4/5] overflow-hidden bg-red">
                 <Image
@@ -78,7 +64,7 @@ export function MenuGrid() {
                 </span>
               </p>
             </Link>
-          </motion.li>
+          </Reveal>
       </ul>
     </>
   );

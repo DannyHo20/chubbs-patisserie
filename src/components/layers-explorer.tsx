@@ -11,6 +11,8 @@ const ease = [0.22, 1, 0.36, 1] as const;
 
 export function LayersExplorer() {
   const [slug, setSlug] = useState(products[0].slug);
+  // The first cake renders static so its details are in the server HTML; later choices animate in.
+  const [chosen, setChosen] = useState(false);
   const reduce = useReducedMotion();
   const product = products.find((p) => p.slug === slug)!;
 
@@ -45,7 +47,10 @@ export function LayersExplorer() {
                 key={p.slug}
                 type="button"
                 aria-pressed={active}
-                onClick={() => setSlug(p.slug)}
+                onClick={() => {
+                  setSlug(p.slug);
+                  setChosen(true);
+                }}
                 className={`min-h-11 rounded-full border px-4 text-sm transition-colors duration-300 ease-ui ${
                   active ? "border-ink bg-ink text-paper" : "border-line text-ink hover:border-ink"
                 }`}
@@ -60,7 +65,7 @@ export function LayersExplorer() {
           key={product.slug}
           className="mt-12"
           aria-live="polite"
-          initial={{ opacity: 0, y: 12 }}
+          initial={chosen ? { opacity: 0, y: 12 } : false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: reduce ? 0.15 : 0.6, ease }}
         >
@@ -71,11 +76,11 @@ export function LayersExplorer() {
               <motion.li
                 key={layer}
                 className="flex items-baseline gap-6 border-b border-line py-3.5"
-                initial={{ opacity: 0, x: -10 }}
+                initial={chosen ? { opacity: 0, x: -10 } : false}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: reduce ? 0 : 0.1 + i * 0.05, ease }}
               >
-                <span className="w-6 font-display text-sm tabular-nums text-red">{String(i + 1).padStart(2, "0")}</span>
+                <span className="w-6 font-display text-base font-medium tabular-nums text-red">{String(i + 1).padStart(2, "0")}</span>
                 <span className="text-[0.95rem] tracking-[0.02em]">{layer}</span>
               </motion.li>
             ))}

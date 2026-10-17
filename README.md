@@ -32,9 +32,11 @@ Run `bun run preview` after building to serve the exported site locally through 
 
 Public site: https://chubbs-patisserie.pages.dev
 
-This is a Direct Upload project. Pushing to GitHub does not automatically deploy it.
+This is a Direct Upload project deployed by GitHub Actions (`.github/workflows/deploy.yml`). Every pull request runs lint and the static build. Every push to `main` also deploys production.
 
-Authorize Wrangler from any device without sharing passwords or API tokens:
+The workflow needs a repository secret named `CLOUDFLARE_API_TOKEN`: a Cloudflare account API token with only the *Account · Cloudflare Pages · Edit* permission. Rotate it in Cloudflare and replace the secret if it leaks.
+
+To deploy manually instead, authorize Wrangler from any device without sharing passwords or API tokens:
 
 ```sh
 bunx wrangler login --device --browser=false --scopes account:read user:read pages:write

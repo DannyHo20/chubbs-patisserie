@@ -18,10 +18,13 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [open, setOpen] = useState(false);
-  const [overHero, setOverHero] = useState(false);
   const pathname = usePathname();
+  // Only the home page opens on the dark hero. Starting from the route keeps the server HTML in the right theme.
+  const [overHero, setOverHero] = useState(pathname === "/");
   const panelRef = useRef<HTMLDivElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
+  // A menu link moves the page, so focus should not jump back to the toggle when it closes the menu.
+  const closedByLinkRef = useRef(false);
 
   useEffect(() => {
     let last = window.scrollY;
@@ -54,6 +57,11 @@ export function Header() {
     root.style.overflow = "hidden";
     const panel = panelRef.current;
     const toggle = toggleRef.current;
+    // Everything behind the open menu leaves the tab order and the accessibility tree.
+    const background = [...(panel?.parentElement?.children ?? [])].filter(
+      (el): el is HTMLElement => el instanceof HTMLElement && el !== panel && !el.inert,
+    );
+    background.forEach((el) => (el.inert = true));
     const focusFrame = requestAnimationFrame(() => panel?.querySelector<HTMLElement>("nav a")?.focus());
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") return setOpen(false);
@@ -72,23 +80,25 @@ export function Header() {
     window.addEventListener("keydown", onKey);
     return () => {
       cancelAnimationFrame(focusFrame);
+      background.forEach((el) => (el.inert = false));
       root.style.overflow = "";
       window.dispatchEvent(new CustomEvent("lenis:start"));
       window.removeEventListener("keydown", onKey);
-      toggle?.focus();
+      if (!closedByLinkRef.current) toggle?.focus();
+      closedByLinkRef.current = false;
     };
   }, [open]);
 
   return (
     <>
-      <div className="relative z-50 bg-ink text-paper">
+      <div role="region" aria-label="Ordering" className="relative z-50 bg-ink text-paper">
         <p className="mx-auto max-w-[1440px] px-6 py-2.5 text-center text-[0.68rem] font-normal uppercase tracking-[0.22em] md:px-12">
           Made to order · Pickup in {site.location} or delivery
         </p>
       </div>
       <header
-        className={`sticky top-0 z-40 transition-[transform,background-color,border-color] duration-500 ease-ui ${
-          hidden && !open ? "-translate-y-full" : "translate-y-0"
+        className={`sticky top-0 z-40 transition-[transform,background-color,border-color,visibility] duration-500 ease-ui ${
+          hidden && !open ? "invisible -translate-y-full" : "visible translate-y-0"
         } ${
           dark
             ? "on-dark border-b border-paper/10 bg-ink text-paper"
@@ -99,7 +109,7 @@ export function Header() {
       >
         <div className="mx-auto grid h-[72px] max-w-[1440px] grid-cols-[1fr_auto_1fr] items-center px-6 md:px-12">
           <nav aria-label="Primary" className="hidden lg:block">
-            <ul className="flex gap-8">
+            <ul className="flex gap-6 xl:gap-8">
               {nav.map((item) => (
                 <li key={item.href}>
                   <Link href={item.href} className="eyebrow link-draw">
@@ -184,7 +194,13 @@ export function Header() {
                 style={{ transitionDelay: open ? `${120 + i * 70}ms` : "0ms" }}
                 className={`transition-[opacity,transform] duration-700 ease-luxe ${open ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"}`}
               >
-                <Link href={item.href} onClick={() => setOpen(false)} className="font-display text-5xl font-light leading-tight">
+                <Link
+                  href={item.href}
+                  onClick={() => {
+                    closedByLinkRef.current = true;
+                    setOpen(false);
+                  }}
+                  className="font-display text-5xl font-light leading-tight">
                   {item.label}
                 </Link>
               </li>
