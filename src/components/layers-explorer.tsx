@@ -80,7 +80,7 @@ export function LayersExplorer() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: reduce ? 0 : 0.1 + i * 0.05, ease }}
               >
-                <span className="w-6 font-display text-base font-medium tabular-nums text-red">{String(i + 1).padStart(2, "0")}</span>
+                <span className="w-6 font-display text-base tabular-nums text-ink-soft">{String(i + 1).padStart(2, "0")}</span>
                 <span className="text-[0.95rem] tracking-[0.02em]">{layer}</span>
               </motion.li>
             ))}

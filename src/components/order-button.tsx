@@ -6,7 +6,7 @@ import { whatsappLink } from "@/data/site";
 import { WhatsAppIcon } from "./icons";
 
 /**
- * Compact floating WhatsApp button for small screens. It stays out of the way while the hero, the ordering
+ * Discreet floating order pill for small screens. It stays out of the way while the hero, the ordering
  * section or the footer is on screen, since each of those already offers a WhatsApp link.
  */
 export function OrderButton() {
@@ -37,14 +37,15 @@ export function OrderButton() {
       href={whatsappLink()}
       target="_blank"
       rel="noopener"
-      aria-label="Order on WhatsApp"
       tabIndex={shown ? 0 : -1}
       aria-hidden={!shown}
-      className={`fixed bottom-[calc(env(safe-area-inset-bottom)+16px)] right-4 z-30 inline-flex h-13 w-13 items-center justify-center rounded-full bg-red text-paper shadow-[0_10px_30px_-12px_rgb(42_23_20/0.6)] transition-[opacity,transform] duration-500 ease-luxe md:hidden ${
+      className={`eyebrow fixed bottom-[calc(env(safe-area-inset-bottom)+16px)] right-4 z-30 inline-flex h-11 items-center gap-2 rounded-full bg-red px-5 text-paper transition-[opacity,transform] duration-500 ease-luxe md:hidden ${
         shown ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-4 opacity-0"
       }`}
     >
-      <WhatsAppIcon className="h-5 w-5" />
+      <WhatsAppIcon className="h-4 w-4" />
+      Order
+      <span className="sr-only"> on WhatsApp</span>
     </a>
   );
 }

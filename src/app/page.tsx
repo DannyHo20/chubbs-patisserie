@@ -17,7 +17,7 @@ const steps = [
 const gallery = [
   { src: "/images/matcha-cover.jpg", alt: "Matcha Jasmine Grape Cake topped with glazed green grapes" },
   { src: "/images/lab-2.jpg", alt: "The Chubbs kitchen under construction, with illustrated bakers" },
-  { src: "/images/lab-1.jpg", alt: "The Chubbs kitchen before opening, captioned Coming Soon" },
+  { src: "/images/black-forest-tart-overhead.jpg", alt: "Black Forest Tart seen from above" },
   { src: "/images/black-forest-cake-cover.jpg", alt: "Black Forest Cake crowned with cherries and a chocolate lattice" },
   { src: "/images/lab-4.jpg", alt: "The finished Chubbs kitchen with an illustration of a baker carrying a cake" },
   { src: "/images/tiramisu-tart.jpg", alt: "Tiramisu Tart with piped mascarpone ganache" },
@@ -126,7 +126,7 @@ export default function Home() {
         <Reveal delay={0.1}>
           <p className="mt-12 font-display text-[clamp(1.75rem,3.4vw,2.9rem)] font-light leading-[1.3]">
             A small pastry lab for those who believe life is a little sweeter with dessert. Indulgent, beautifully
-            crafted, <em className="italic text-red">and made to make you smile.</em>
+            crafted, <em className="italic">and made to make you smile.</em>
           </p>
         </Reveal>
       </section>
@@ -187,8 +187,8 @@ export default function Home() {
           <div className="relative lg:col-span-6">
             <ImageReveal className="aspect-[4/5] bg-stone">
               <Image
-                src="/images/black-forest-tart-overhead.jpg"
-                alt="Black Forest Tart seen from above"
+                src="/images/lab-1.jpg"
+                alt="Black-and-white photo of the Chubbs kitchen with an illustrated baker carrying a cake"
                 fill
                 sizes="(min-width: 1024px) 45vw, 100vw"
                 className="object-cover"
@@ -216,7 +216,7 @@ export default function Home() {
               <blockquote className="mt-8 font-display text-[clamp(2.2rem,4vw,3.4rem)] font-light leading-[1.1]">
                 It all started with a simple question: <em className="italic">“Am I fat?”</em>
                 <span className="mt-4 block">
-                  The answer? <em className="italic text-red">“A little chubby.”</em>
+                  The answer? <em className="italic">“A little chubby.”</em>
                 </span>
               </blockquote>
             </Reveal>
@@ -277,7 +277,7 @@ export default function Home() {
             <ol className="border-t border-line lg:col-span-7 lg:col-start-6">
               {steps.map((s, i) => (
                 <Reveal as="li" key={s.title} delay={i * 0.08} className="grid grid-cols-[4rem_1fr] gap-4 border-b border-line py-8 md:grid-cols-[6rem_1fr]">
-                  <span className="font-display text-4xl font-light italic text-red md:text-5xl">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="font-display text-4xl font-light italic text-ink-soft md:text-5xl">{String(i + 1).padStart(2, "0")}</span>
                   <div>
                     <h3 className="font-display text-2xl md:text-3xl">{s.title}</h3>
                     <p className="mt-2 max-w-md leading-relaxed text-ink-soft">{s.body}</p>
