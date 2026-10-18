@@ -40,9 +40,9 @@ export function MenuGrid() {
         })}
       </div>
 
-      <ul className="mt-12 grid gap-x-6 gap-y-14 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-8">
+      <ul className="mt-14 grid gap-x-6 gap-y-16 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-10 lg:gap-y-20">
           {shown.map((p, i) => (
-            <Reveal as="li" key={p.slug} delay={(i % 4) * 0.08}>
+            <Reveal as="li" key={p.slug} delay={(i % 3) * 0.08}>
               <ProductCard product={p} />
             </Reveal>
           ))}
@@ -53,13 +53,13 @@ export function MenuGrid() {
                   src="/images/brand-card.jpg"
                   alt="Chubb’s brand card reading Where Sweet Meets Chubby"
                   fill
-                  sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                   className="object-cover transition-transform duration-[1200ms] ease-luxe group-hover:scale-[1.03]"
                 />
               </div>
-              <p className="mt-5 font-display text-2xl italic leading-tight">Where sweet meets chubby</p>
-              <p className="mt-3 border-t border-line pt-3 text-sm">
-                <span className="eyebrow text-[0.64rem] text-red">
+              <p className="mt-5 font-display text-[1.75rem] italic leading-tight">Where sweet meets chubby</p>
+              <p className="mt-4 border-t border-line pt-4 text-[0.95rem]">
+                <span className="eyebrow text-[0.68rem] text-ink">
                   <span className="link-draw">Read our story</span>
                 </span>
               </p>
